@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-/* $Id: URLUtil.java,v 1.1 2008/09/15 07:10:28 jmaerki Exp $ */
+/* $Id: URLUtil.java,v 1.3 2012/05/17 13:57:37 jmaerki Exp $ */
 
 package org.krysalis.barcode4j.tools;
 
@@ -28,6 +28,9 @@ import java.net.URLDecoder;
  * Utility functions for handling URLs.
  */
 public class URLUtil {
+
+    public static final String URL_START = "url(";
+    public static final String URL_END = ")";
 
     private static final String DATA_PROTOCOL = "data:";
 
@@ -54,9 +57,22 @@ public class URLUtil {
         }
     }
 
+    /**
+     * Returns the data pointed at by a URL as a byte array.
+     * @param url the URL
+     * @return encoding text as a string
+     * @throws IOException if an I/O error occurs
+     */
+    public static String getDataEncoding(String url){
+        int commaPos = url.indexOf(',');
+        // header is of the form data:[<mediatype>][;charset=<encoding>][;base64]
+        String header = url.substring(0, commaPos);
+        return getEncoding(header);
+    }
+
     private static byte[] parseDataURL(String url, String encoding) throws IOException {
         int commaPos = url.indexOf(',');
-        // header is of the form data:[<mediatype>][;base64]
+        // header is of the form data:[<mediatype>][;charset=<encoding>][;base64]
         String header = url.substring(0, commaPos);
         String data = url.substring(commaPos + 1);
         if (header.endsWith(";base64")) {
@@ -67,18 +83,40 @@ public class URLUtil {
             IOUtil.closeQuietly(in);
             return baout.toByteArray();
         } else {
-            String urlEncoding = "US-ASCII";
-            final int charsetpos = header.indexOf(";charset=");
-            if (charsetpos > 0) {
-                urlEncoding = header.substring(charsetpos + 9);
-                int pos = urlEncoding.indexOf(';');
-                if (pos > 0) {
-                    urlEncoding = urlEncoding.substring(0, pos);
-                }
+            String urlEncoding = getEncoding(header);
+            if (urlEncoding == null) {
+                urlEncoding = "US-ASCII";
             }
             final String unescapedString = URLDecoder.decode(data, urlEncoding);
             byte[] bytes = unescapedString.getBytes(encoding);
             return bytes;
+        }
+    }
+
+    private static String getEncoding(String header) {
+        String urlEncoding = null;
+        final int charsetpos = header.indexOf(";charset=");
+        if (charsetpos > 0) {
+            urlEncoding = header.substring(charsetpos + 9);
+            int pos = urlEncoding.indexOf(';');
+            if (pos > 0) {
+                urlEncoding = urlEncoding.substring(0, pos);
+            }
+        }
+        return urlEncoding;
+    }
+
+    public static boolean isURL(String message) {
+        return message.startsWith(URLUtil.URL_START) && message.endsWith(URLUtil.URL_END);
+    }
+
+    public static String getURL(String message) {
+        if (URLUtil.isURL(message)) {
+            String url = message.substring(URLUtil.URL_START.length(),
+                    message.length() - URLUtil.URL_END.length());
+            return url;
+        } else {
+            return null;
         }
     }
 
