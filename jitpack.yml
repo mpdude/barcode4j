@@ -1,0 +1,13 @@
+install:
+- VERSION=2.2-SNAPSHOT-20190402.1
+- ant 
+- mvn install:install-file -DgroupId=com.github.mpdude -DartifactId=barcode4j-fop-ext-0.20.5-complete -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=true -Dfile=build/barcode4j-fop-ext-0.20.5-complete.jar
+- mvn install:install-file -DgroupId=com.github.mpdude -DartifactId=barcode4j-fop-ext-0.20.5 -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=true -Dfile=build/barcode4j-fop-ext-0.20.5.jar
+- mvn install:install-file -DgroupId=com.github.mpdude -DartifactId=barcode4j-fop-ext-complete -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=true -Dfile=build/barcode4j-fop-ext-complete.jar
+- mvn install:install-file -DgroupId=com.github.mpdude -DartifactId=barcode4j-fop-ext -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=true -Dfile=build/barcode4j-fop-ext.jar
+- mvn install:install-file -DgroupId=com.github.mpdude -DartifactId=barcode4j-light -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=true -Dfile=build/barcode4j-light.jar
+- mvn install:install-file -DgroupId=com.github.mpdude -DartifactId=barcode4j-xgc -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=true -Dfile=build/barcode4j-xgc.jar
+- mvn install:install-file -DgroupId=com.github.mpdude -DartifactId=barcode4j -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=true -Dfile=build/barcode4j.jar
+- mvn install:install-file -DgroupId=com.github.mpdude -DartifactId=barcode4j-fop-ext-resources -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=true -Dfile=build/resource-jars/barcode4j-fop-ext-resources.jar
+- mvn install:install-file -DgroupId=com.github.mpdude -DartifactId=barcode4j-xgc-resources -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=true -Dfile=build/resource-jars/barcode4j-xgc-resources.jar
+
